@@ -3,6 +3,12 @@
 Effective Java
 - [2장 객체 생성과 파괴](Effective-Java/2장-객체-생성과-파괴.md)
 - [3장 모든 객체의 공통 메서드](Effective-Java/3장-모든-객체의-공통-메서드.md)
+- [4장 클래스와 인터페이스](Effective-Java/4장-클래스와-인터페이스.md)
+- [5장 제네릭](Effective-Java/5장-제네릭.md)
+- [6장 열거 타입과 애너테이션](Effective-Java/6장-열거-타입과-애너테이션.md)
+- [7장 람다와 스트림](Effective-Java/7장-람다와-스트림.md)
+- [8장 메서드](Effective-Java/8장-메서드.md)
+- [9장 일반적인 프로그래밍 원칙](Effective-Java/9장-일반적인-프로그래밍-원칙.md)
 
 Real MySQL 8.0
 - [04 아키텍처](Real-MySQL-8.0/04-아키텍처.md)
