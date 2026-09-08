@@ -34,4 +34,4 @@
 ---
 
 ### Troubleshooting
-- [OSIV 미동작 구간에서의 LazyInitializationException](트러블슈팅/OSIV-미동작-구간에서의-LazyInitializationException.md)
+- [OSIV 미동작 구간에서의 LazyInitializationException](Troubleshooting/OSIV-미동작-구간에서의-LazyInitializationException.md)
