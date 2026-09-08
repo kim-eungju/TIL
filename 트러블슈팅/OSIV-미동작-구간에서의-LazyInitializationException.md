@@ -1,3 +1,9 @@
+## 0. OSIV
+
+OSIV = Open Session In View
+
+JPA 기준으로 풀어 말하면 HTTP 요청이 끝날 때까지 영속성 컨텍스트(EntityManager)를 열어두는 전략
+
 ## 1. 증상
 
 권한 취약점 이슈 대응으로 `SessionInterceptor.preHandle()` 안에서 `X-Set-Id` 헤더의 세트 접근 권한을
