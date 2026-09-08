@@ -32,4 +32,4 @@
 - [2장 네트워크 연결과 구성 요소](IT-엔지니어를-위한-네트워크-입문/2장-네트워크-연결과-구성-요소.md)
 
 ### 트러블슈팅
-- [OSIV 미동작 구간에서의 LazyInitializationException](OSIV-미동작-구간에서의-LazyInitializationException.md)
+- [OSIV 미동작 구간에서의 LazyInitializationException](트러블슈팅/OSIV-미동작-구간에서의-LazyInitializationException.md)
