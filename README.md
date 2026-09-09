@@ -1,5 +1,10 @@
 # TIL
 
+### Troubleshooting
+- [OSIV 미동작 구간에서의 LazyInitializationException](Troubleshooting/OSIV-미동작-구간에서의-LazyInitializationException.md)
+
+---
+
 ### Effective Java
 - [2장 객체 생성과 파괴](Effective-Java/2장-객체-생성과-파괴.md)
 - [3장 모든 객체의 공통 메서드](Effective-Java/3장-모든-객체의-공통-메서드.md)
@@ -31,7 +36,4 @@
 - [1장 네트워크 시작하기](IT-엔지니어를-위한-네트워크-입문/1장-네트워크-시작하기.md)
 - [2장 네트워크 연결과 구성 요소](IT-엔지니어를-위한-네트워크-입문/2장-네트워크-연결과-구성-요소.md)
 
----
 
-### Troubleshooting
-- [OSIV 미동작 구간에서의 LazyInitializationException](Troubleshooting/OSIV-미동작-구간에서의-LazyInitializationException.md)
