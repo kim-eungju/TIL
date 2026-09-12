@@ -16,6 +16,7 @@
 - [9장 일반적인 프로그래밍 원칙](Effective-Java/9장-일반적인-프로그래밍-원칙.md)
 - [10장 예외](Effective-Java/10장-예외.md)
 - [11장 동시성](Effective-Java/11장-동시성.md)
+- [12장 직렬화](Effective-Java/12장-직렬화.md)
 
 ### Real MySQL 8.0
 - [04 아키텍처](Real-MySQL-8.0/04-아키텍처.md)
