@@ -60,3 +60,65 @@ UserService
  ├─ 사용자 레벨 업그레이드
  └─ 트랜잭션 처리
 ```
+
+---
+
+## 3. DI를 이용해서 트랜잭션을 클래스 밖으로 빼자
+
+여기서 인터페이스를 이용한다
+```java
+public interface UserService {
+
+    void upgradeLevels();
+}
+```
+
+실제 비즈니스 로직
+```java
+public class UserServiceImpl implements UserService {
+
+    @Override
+    public void upgradeLevels() {
+        // 순수 비즈니스 로직
+    }
+}
+```
+
+그리고 트랜잭션을 담당하는 클래스 `UserServiceTx`를 따로 만든다
+```java
+public class UserServiceTx implements UserService {
+
+    private UserService userService;
+    private PlatformTransactionManager transactionManager;
+
+    @Override
+    public void upgradeLevels() {
+        TransactionStatus status =
+            transactionManager.getTransaction(...);
+        try {
+            // --- 핵심 비즈니스 로직 시작 ---
+            userService.upgradeLevels();
+            // --- 핵심 비즈니스 로직 종료 ---
+            transactionManager.commit(status);
+        } catch (RuntimeException e) {
+            transactionManager.rollback(status);
+            throw e;
+        }
+    }
+}
+```
+
+호출 구조는 이렇게 된다
+
+```
+Controller
+    ↓
+UserServiceTx
+    ↓
+UserServiceImpl
+    ↓
+UserDao
+```
+
+여기서 `UserServiceTx`가 __프록시(Proxy)__ 역할을 한다
+이 구조가 정말 중요하다
