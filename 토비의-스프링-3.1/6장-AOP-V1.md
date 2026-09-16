@@ -122,3 +122,38 @@ UserDao
 
 여기서 `UserServiceTx`가 __프록시(Proxy)__ 역할을 한다
 이 구조가 정말 중요하다
+
+---
+
+## 4. Proxy
+
+프록시란? 진짜 객체 대신 클라이언트 요청을 먼저 받아주는 객체
+```
+Client
+   ↓
+Proxy
+   ↓
+Target
+```
+
+여기서는 이렇게 된다
+```
+Proxy  = UserServiceTx
+Target = UserServiceImpl
+```
+
+Proxy는 요청을 받아서 트랜잭션을 처리하고 실제 비즈니스 로직은 Target에게 위임한다
+
+```
+proxy.upgradeLevels() 의 내부
+---
+transaction begin
+target.upgradeLevels()
+transaction commit
+---
+```
+
+토비에서 이후 계속 나오는 Target은 __부가기능을 적용할 실제 객체__ 라고 생각하면 된다
+
+---
+
