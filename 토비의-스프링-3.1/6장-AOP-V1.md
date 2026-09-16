@@ -157,3 +157,132 @@ transaction commit
 
 ---
 
+## 5. 그런데 프록시 클래스를 매번 만들면?
+
+서비스가 100개라면? <br/>
+이런 클래스를 전부 만들어야 한다
+```
+UserServiceTx
+OrderServiceTx
+PaymentServiceTx
+AssetServiceTx
+...
+```
+
+이러면 똑같은 코드를 계속 작성해야 한다
+```java
+try {
+    target.doSomething();
+    commit();
+} catch (...) {
+    rollback();
+}
+```
+
+굉장히 비효율적인데 __프록시를 자동으로 만들 수 없을까?__ <br/>
+여기서 __JDK Dynamic Proxy__ 가 등장한다
+
+---
+
+## 6. Dynamic Proxy
+
+Java에는 런타임에 프록시 객체를 만들어주는 기능이 있다 (`InvocationHandler`) <br/>
+
+우선, 아래 코드는 `createdUser()`, `deleteUser()`마다 똑같은 프록시 코드를 반복한다
+```java
+public class UserServiceProxy implements UserService {
+
+    private final UserService target;
+
+    public UserServiceProxy(UserService target) {
+        this.target = target;
+    }
+
+    @Override
+    public void createUser(String name) {
+        System.out.println("트랜잭션 시작");
+
+        try {
+            target.createUser(name);
+            System.out.println("트랜잭션 커밋");
+        } catch (Exception e) {
+            System.out.println("트랜잭션 롤백");
+            throw e;
+        }
+    }
+
+    @Override
+    public void deleteUser(Long id) {
+        System.out.println("트랜잭션 시작");
+
+        try {
+            target.deleteUser(id);
+            System.out.println("트랜잭션 커밋");
+        } catch (Exception e) {
+            System.out.println("트랜잭션 롤백");
+            throw e;
+        }
+    }
+}
+```
+
+이걸 JDK Dynamic Proxy 로 바꾸면 `UserServiceProxy` 클래스 자체를 없애고, `InvocationHandler`를 만든다
+
+```java
+public class TransactionInvocationHandler implements InvocationHandler {
+
+    private final Object target;
+
+    public TransactionInvocationHandler(Object target) {
+        this.target = target;
+    }
+
+    @Override
+    public Object invoke(
+            Object proxy,
+            Method method,
+            Object[] args
+    ) throws Throwable {
+
+        System.out.println("트랜잭션 시작");
+
+        try {
+            Object result = method.invoke(target, args);
+
+            System.out.println("트랜잭션 커밋");
+
+            return result;
+
+        } catch (Exception e) {
+            System.out.println("트랜잭션 롤백");
+            throw e;
+        }
+    }
+}
+```
+```java
+public static void main(String[] args) {
+
+    // 진짜 객체
+    UserService target = new UserServiceImpl();
+
+    // Dynamic Proxy 생성
+    UserService proxy = (UserService) Proxy.newProxyInstance(
+            UserService.class.getClassLoader(),
+            new Class[]{UserService.class},
+            new TransactionInvocationHandler(target)
+    );
+
+    proxy.createUser("kim");
+
+    proxy.deleteUser(1L);
+}
+```
+
+이제 프록시 클래스를 직접 만들지 않아도된다
+```
+프록시 객체 생성 = Java에게 맡김
+부가기능 = InvocationHandler에 작성
+```
+
+---
