@@ -286,3 +286,106 @@ public static void main(String[] args) {
 ```
 
 ---
+
+## 7. 그래도 문제가 하나 남아 있다
+
+Spring Bean으로 관리할 수 없다
+```java
+UserService proxy = (UserService) Proxy.newProxyInstance(
+            UserService.class.getClassLoader(),
+            new Class[]{UserService.class},
+            new TransactionInvocationHandler(target)
+    );
+```
+
+그래서 Spring은 프록시를 편하게 생성할 수 있도록 `ProxyFactoryBean` 추상화를 제공한다 <br/>
+여기서 개념을 한 단계 더 분리한다
+```
+Target
+  ↓
+Advice
+  ↓
+Pointcut
+```
+
+Advice 와 Pointcut 이 두 단어가 굉장히 중요하다
+
+---
+
+## 8. Advice & Pointcut 
+
+Advice
+- 무엇을 적용할 것인가?
+- 트랜잭션 처리
+- 부가 기능
+
+Pointcut
+- 어디에 적용할 것인가?
+- 트랜잭션 Advice를 어떤 메서드에 적용할건데?
+
+Advisor
+- Pointcut + Advice 둘을 합쳐 __Advisor__ 라고 부른다
+
+---
+
+## 9. 자동 프록시 생성
+
+그런데 ProxyFactoryBean도 Bean마다 등록해야 한다 <br/>
+서비스가 100개라면 Bean 100개를 설정해야 한다
+```
+UserService
+OrderService
+PaymentService
+AssetService
+...
+```
+```java
+@Bean
+public ProxyFactoryBean userService(
+        UserService userServiceTarget,
+        LoggingAdvice loggingAdvice) {
+
+    ProxyFactoryBean factory = new ProxyFactoryBean();
+
+    factory.setTarget(userServiceTarget);
+    factory.addAdvice(loggingAdvice);
+
+    return factory;
+}
+...
+```
+
+자동 프록시 생성은 Spring 컨테이너가 Bean을 만들 때 아래와 같이 동작한다
+
+```
+Bean 생성
+   ↓
+이 Bean이 Pointcut 대상인가?
+   ↓ YES
+Proxy 생성
+   ↓
+Proxy를 Bean으로 등록
+```
+
+pointcut 대상 판단은 내가 직접 지정한다 <br/>
+수동으로 Bean을 만들때와 다르게, "규칙"을 지정할 수 있다
+```java
+@Bean
+public Advisor loggingAdvisor(LoggingAdvice advice) {
+
+    // 1. Pointcut 생성
+    NameMatchMethodPointcut pointcut =
+            new NameMatchMethodPointcut();
+
+    // save 메서드가 대상
+    pointcut.setMappedName("save");
+
+    // 2. Pointcut + Advice를 Advisor로 등록
+    return new DefaultPointcutAdvisor(
+            pointcut,
+            advice
+    );
+}
+```
+
+---
