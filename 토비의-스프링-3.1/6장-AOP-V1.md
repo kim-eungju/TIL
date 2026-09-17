@@ -330,8 +330,8 @@ Advisor
 
 ## 9. 자동 프록시 생성
 
-그런데 ProxyFactoryBean도 Bean마다 등록해야 한다 <br/>
-서비스가 100개라면 Bean 100개를 설정해야 한다
+그런데 `ProxyFactoryBean`도 `Bean` 마다 등록해야 한다 <br/>
+서비스가 100개라면 `Bean` 100개를 설정해야 한다
 ```
 UserService
 OrderService
@@ -355,7 +355,7 @@ public ProxyFactoryBean userService(
 ...
 ```
 
-자동 프록시 생성은 Spring 컨테이너가 Bean을 만들 때 아래와 같이 동작한다
+자동 프록시 생성은 Spring 컨테이너가 `Bean`을 만들 때 아래와 같이 동작한다
 
 ```
 Bean 생성
@@ -368,7 +368,7 @@ Proxy를 Bean으로 등록
 ```
 
 pointcut 대상 판단은 내가 직접 지정한다 <br/>
-수동으로 Bean을 만들때와 다르게, "규칙"을 지정할 수 있다
+수동으로 `Bean` 을 만들때와 다르게, __"규칙"__ 을 지정할 수 있다
 ```java
 @Bean
 public Advisor loggingAdvisor(LoggingAdvice advice) {
