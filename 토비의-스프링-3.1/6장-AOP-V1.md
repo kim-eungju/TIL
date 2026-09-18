@@ -415,3 +415,5 @@ AOP는 이것을 __Transaction Aspect__ 라는 하나의 모듈로 모은다 <br
 그래서 __Aspect Oriented Programming__ 관점지향 프로그래밍이라고 부른다 _*Aspect = 측면_ <br/><br/> 
 AOP는 OOP를 대체하는게 아니라, <br/>
 OOP만으로 깔끔하게 모듈화하기 어려운 이런 횡단 관심사를 보완하는 기술이라고 이해하는게 정확하다
+
+---
