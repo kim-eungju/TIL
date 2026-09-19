@@ -445,6 +445,8 @@ Target.upgradeLevels()
 
 즉 `@Transactional`을 보고 Spring이 메서드 안에 코드를 집어넣는게 아님
 ```
+아래처럼 생각할 수 있지만 아니다
+---
 트랜잭션시작
    ↓
 methodB();
