@@ -417,3 +417,118 @@ AOP는 OOP를 대체하는게 아니라, <br/>
 OOP만으로 깔끔하게 모듈화하기 어려운 이런 횡단 관심사를 보완하는 기술이라고 이해하는게 정확하다
 
 ---
+
+## 11. @Transactional
+
+현대 Spring 개발자는 익숙하다 
+
+```java
+@Transactional
+public void upgradeLevels() {
+    ...
+}
+```
+
+코드 한 줄이지만 실제 개념적인 구조는 대략 이렇게 된다
+
+```java
+Caller
+   ↓
+Spring Proxy
+   ↓
+Transaction Interceptor
+   ↓
+TransactionManager
+   ↓
+Target.upgradeLevels()
+```
+
+즉 `@Transactional`을 보고 Spring이 메서드 안에 코드를 집어넣는게 아님
+```
+트랜잭션시작
+   ↓
+methodB();
+   ↓
+트랜잭션종료
+```
+
+그래서 유명한 문제가 생긴다 <br/>
+`methodA()`에 트랜잭션이 없는 상태에서, 내부 호출로 실행된 `methodB()`의 `@Transactional`은 동작하지 않는다
+```java
+@Service
+public class UserService {
+
+    public void methodA() {
+        methodB(); // this.methodB()
+    }
+
+    @Transactional
+    public void methodB() {
+        ...
+    }
+}
+```
+
+비유하면
+- 프록시 = 건물 입구의 보안요원
+- @Transactional = "들어갈 때 보호 장비를 지급해 주세요"라는 표시
+- 외부에서 methodB() 호출 = 건물 입구를 통과함 → 보호 장비 지급
+- methodA()에서 methodB() 호출 = 이미 건물 안에서 방을 이동함 → 입구를 다시 안 지나감
+
+트랜잭션 메서드는 별도 빈으로 분리하자
+```java
+@Service
+@RequiredArgsConstructor
+public class UserService {
+
+    private final UserTransactionService transactionService;
+
+    public void methodA() {
+        transactionService.methodB();
+    }
+}
+
+@Service
+public class UserTransactionService {
+
+    @Transactional
+    public void methodB() {
+        ...
+    }
+}
+```
+
+> `@Transactional`은 메서드 자체의 마법이 아니라, 스프링 프록시가 메서드 호출 앞뒤에 트랜잭션 처리를 끼워 넣는 기능이다. 같은 객체 내부 호출은 프록시를 거치지 않는다.
+
+---
+
+## 12. 테스트
+
+단위테스트도 AOP와 연결돼 있다 <br/>
+기존 `UserService`가 다른 로직과 강하게 얽혀있으면 테스트하기 어렵다
+
+```
+UserService
+ ├ Business Logic
+ ├ Transaction
+ ├ UserDao
+ └ MailSender
+```
+
+관심사를 분리하면 순수 비즈니스 로직만 고립해서 테스트할 수 있다
+```
+UserServiceImpl
+   ↓
+MockUserDao
+MockMailSender
+```
+
+> 관심사를 분리하면 설계도 좋아지고 테스트도 쉬워진다.
+
+---
+
+## 13. 결론
+
+관심사 분리 → DI → Proxy → Dynamic Proxy → ProxyFactory → 자동 Proxy → AOP <br/>
+이 흐름을 이해하면 `@Transactional`, Spring Security의 메서드 보안, `@Cacheable`, 커스텀 `@Aspect` 등을 볼 때 <br/>
+"아, 결국 타깃 앞에 프록시 세워서 호출을 가로채는 구조구나" 생각하자
