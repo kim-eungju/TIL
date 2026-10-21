@@ -1,7 +1,8 @@
 # TIL
 
 ### 개발로그
-- [OSIV(Open Session In View)](Troubleshooting/OSIV(Open_Session_In_View).md)
+- [OSIV(Open Session In View)](개발로그/OSIV(Open_Session_In_View).md)
+- [HttpSession 주입과 비동기 처리.md](개발로그/HttpSession_주입과_비동기_처리.md)
 
 ---
 
