@@ -1,7 +1,7 @@
 # TIL
 
 ### 개발 로그
-- [OSIV 미동작 구간에서의 LazyInitializationException](Troubleshooting/OSIV-미동작-구간에서의-LazyInitializationException.md)
+- [OSIV(Open Session In View)](Troubleshooting/OSIV-미동작-구간에서의-LazyInitializationException.md)
 
 ---
 
