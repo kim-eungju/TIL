@@ -1,7 +1,7 @@
 # TIL
 
-### 개발 로그
-- [OSIV(Open Session In View)](Troubleshooting/OSIV-미동작-구간에서의-LazyInitializationException.md)
+### 개발로그
+- [OSIV(Open Session In View)](Troubleshooting/OSIV(Open_Session_In_View).md)
 
 ---
 
