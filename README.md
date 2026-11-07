@@ -7,4 +7,4 @@
 ---
 - [📙Effective Java](Effective-Java.md)
 - [📗토비의 스프링 3.1](토비의-스프링-3.1.md)
-- [📘Real MySQL](Real-MySQL.md)
+- [📘Real MySQL 8.0](Real-MySQL-8.0.md)
